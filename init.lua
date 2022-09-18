@@ -1,5 +1,5 @@
-require("option")
---[[ require("keymaps") ]]
+require "option"
+require "keymaps"
 --[[ require("plugins") ]]
 --[[ require("colorscheme") ]]
 
