@@ -53,5 +53,5 @@ vim.cmd [[set formatoptions-=cro]] -- TODO: this doesn't seem to work
 --[[ vim.cmd("let g:netrw_liststyle=3") ]]
 --[[ vim.cmd("let g:netrw_browse_split=3") ]]
 
---[[ vim.cmd([[let g:python3_host_prog = 'C:\Python310\']]) ]]
+-- vim.cmd([[let g:python3_host_prog = 'C:\Python310\']])
 
