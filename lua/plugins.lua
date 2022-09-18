@@ -23,7 +23,6 @@ vim.cmd([[
   augroup end
 ]])
 
-vim.cmd([[highlight Pmenu ctermbg=Black ctermfg=White guibg=Black guifg=White]])
 
 
 local status_ok, packer = pcall(require, "packer")
@@ -51,7 +50,7 @@ return require('packer').startup(function(use)
 
   ---- Colorshemes
   ----use "lunarvim/colorschemes" --- A bunch of colorschemes you can try out
-  --use "lunarvim/darkplus.nvim"
+  use "lunarvim/darkplus.nvim"
 
   ---- airline
   ----use "vim-airline/vim-airline"

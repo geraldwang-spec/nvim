@@ -38,6 +38,7 @@ vim.bo.autoread = true
 vim.o.background = "dark"
 
 vim.cmd([[highlight Pmenu ctermbg=Black ctermfg=White guibg=Black guifg=White]])
+
 vim.cmd([[syntax on]])
 
 vim.cmd "set whichwrap+=<,>,[,],h,l"
