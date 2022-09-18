@@ -24,7 +24,6 @@ vim.cmd([[
 ]])
 
 
-
 local status_ok, packer = pcall(require, "packer")
 if not status_ok then
   print("Load packer fail")
@@ -51,6 +50,9 @@ return require('packer').startup(function(use)
   ---- Colorshemes
   ----use "lunarvim/colorschemes" --- A bunch of colorschemes you can try out
   use "lunarvim/darkplus.nvim"
+
+  -- coc
+  use {'neoclide/coc.nvim', branch = 'release'}
 
   ---- airline
   ----use "vim-airline/vim-airline"
