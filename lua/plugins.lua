@@ -54,6 +54,9 @@ return require('packer').startup(function(use)
   -- coc
   use {'neoclide/coc.nvim', branch = 'release'}
 
+  -- toggleterm
+  use "akinsho/toggleterm.nvim"
+  
   ---- airline
   ----use "vim-airline/vim-airline"
   ----use "vim-airline/vim-airline-themes"
@@ -108,8 +111,6 @@ return require('packer').startup(function(use)
   ---- lualine
   --use "nvim-lualine/lualine.nvim"
 
-  ---- toggleterm
-  --use "akinsho/toggleterm.nvim"
 
   ---- Project
   --use "ahmedkhalf/project.nvim"

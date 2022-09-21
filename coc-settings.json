@@ -1,0 +1,14 @@
+{
+  "coc.preferences.useQuickfixForLocations": true,
+  "coc.preferences.snippets.enable": true,
+  "coc.preferences.extensionUpdateCheck": "never",
+  "suggest.disableMenu": true,
+  "suggest.snippetIndicator": "",
+
+  "diagnostic.enable": false,
+  "diagnostic.errorSign" : "X",
+  "diagnostic.warningSign" : "W",
+  "diagnostic.virtualText": true,
+  "diagnostic.enableHighlightLineNumber": true,
+  "suggest.noselect": true
+}
