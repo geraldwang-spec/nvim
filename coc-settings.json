@@ -5,10 +5,11 @@
   "suggest.disableMenu": true,
   "suggest.snippetIndicator": "",
 
-  "diagnostic.enable": false,
+  "diagnostic.enable": true,
   "diagnostic.errorSign" : "X",
   "diagnostic.warningSign" : "W",
-  "diagnostic.virtualText": true,
+  "diagnostic.virtualText": false,
   "diagnostic.enableHighlightLineNumber": true,
+  "diagnostic.checkCurrentLine": false,
   "suggest.noselect": true
 }

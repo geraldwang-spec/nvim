@@ -67,7 +67,7 @@ keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
 
 --------------------------------------------------------------
 
-keymap("n", "<leader>e", ":Lex 30<cr>", opts)
+keymap("n", "<F2>", ":Lex 30<cr>", opts)
 
 keymap("n", "qc", ":q!<CR>", opts)
 keymap("n", "qa", ":wq<CR>", opts)
@@ -109,6 +109,10 @@ keymap("n", "<A-9>", "9gt", opts) ]]
 -- It is work-run for navigation tabs
 keymap("n", "<A-[>", "<cmd>bp<CR>", opts)
 keymap("n", "<A-]>", "<cmd>bn<CR>", opts)
+-- netrw
+keymap("n", "m.", "gt", opts)
+keymap("n", "m,", "gT", opts)
+
 
 --[[
 -- Telescope

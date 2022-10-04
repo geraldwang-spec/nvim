@@ -45,6 +45,10 @@ vim.cmd "set whichwrap+=<,>,[,],h,l"
 vim.cmd [[set iskeyword+=-]]
 vim.cmd [[set formatoptions-=cro]] -- TODO: this doesn't seem to work
 
+-- netrw
+vim.cmd( "let g:netrw_liststyle=3")
+vim.cmd("let g:netrw_browse_split=3")
+
 -- airline
 --vim.cmd([[let g:airline#etensions#tabline#enabled = 1]])
 --vim.cmd([[let g:airline#etensions#tabline#left_sep = ' ']])
