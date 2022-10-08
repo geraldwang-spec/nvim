@@ -11,5 +11,6 @@
   "diagnostic.virtualText": false,
   "diagnostic.enableHighlightLineNumber": true,
   "diagnostic.checkCurrentLine": false,
-  "suggest.noselect": true
+  "suggest.noselect": true,
+  "Lua.telemetry.enable": true
 }
