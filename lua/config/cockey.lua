@@ -50,3 +50,15 @@ keyset("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
 
 -- Run the Code Lens action on the current line.
 keyset("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
+
+
+-- coc-explorer
+--local opt = { noremap = true, silent = true }
+--local term_opts = { silent = true }
+---- Shorten function name
+--local keymap = vim.api.nvim_set_keymap
+--vim.g.mapleader = " "
+--vim.g.maplocalleader = " "
+--
+--keymap("n", "<F2>", ":CocCommand explorer<CR>", opt)
+

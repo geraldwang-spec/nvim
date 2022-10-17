@@ -67,12 +67,16 @@ keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
 
 --------------------------------------------------------------
 
-keymap("n", "<F2>", ":Lex 30<cr>", opts)
+--keymap("n", "<F2>", ":Lex 30<cr>", opts)
 
 keymap("n", "qc", ":q!<CR>", opts)
 keymap("n", "qa", ":wq<CR>", opts)
 -- show lau messages
 keymap("n", "<leader>d", ":messages<CR>", opts)
+--keymap("n", "<leader>e", ":CocCommand explorer<CR>", opts)
+
+--nvim tree
+keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
 
 -- ctrl k/j
 keymap("n", "<C-u>", "9k", opts)

@@ -57,6 +57,14 @@ return require('packer').startup(function(use)
   -- toggleterm
   use "akinsho/toggleterm.nvim"
   
+  -- bufferline
+  use "akinsho/bufferline.nvim"
+  use "moll/vim-bbye"
+
+  -- nvim tree
+  use 'kyazdani42/nvim-web-devicons'
+  use 'kyazdani42/nvim-tree.lua'
+  
   ---- airline
   ----use "vim-airline/vim-airline"
   ----use "vim-airline/vim-airline-themes"
@@ -97,13 +105,7 @@ return require('packer').startup(function(use)
   --use "numToStr/Comment.nvim" -- Easily comment stuff
   --use 'JoosepAlviste/nvim-ts-context-commentstring'
 
-  ---- nvim tree
-  --use 'kyazdani42/nvim-web-devicons'
-  --use 'kyazdani42/nvim-tree.lua'
   --
-  ---- bufferline
-  --use "akinsho/bufferline.nvim"
-  --use "moll/vim-bbye"
 
   ---- Null-ls
   --use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters

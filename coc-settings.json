@@ -12,5 +12,18 @@
   "diagnostic.enableHighlightLineNumber": true,
   "diagnostic.checkCurrentLine": false,
   "suggest.noselect": true,
-  "Lua.telemetry.enable": true
+  "Lua.telemetry.enable": true,
+  //"snippets.excludePatterns": 
+  //[
+  //  "./snips"
+  //],
+  //"explorer.width": 30,
+  //"explorer.openAction.strategy":"tab",
+  //"explorer.file.showHiddenFiles": true,
+  //"explorer.file.reveal.auto": false,
+  //"explorer.previewAction.onHover": false,
+  //"explorer.git.enable":true,
+
+  "clangd.path": "~\\AppData\\Local\\coc\\extensions\\coc-clangd-data\\install\\15.0.1\\clangd_15.0.1\\bin\\clangd.exe"
+
 }
