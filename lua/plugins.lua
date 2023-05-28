@@ -52,6 +52,23 @@ return require('packer').startup(function(use)
   ----use "lunarvim/colorschemes" --- A bunch of colorschemes you can try out
   use "lunarvim/darkplus.nvim"
 
+  -- telescope
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.1',
+    -- or                            , branch = '0.1.x',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
+
+   -- Treesitter
+  use {
+    "nvim-treesitter/nvim-treesitter",
+    run = ":TSUpdate",
+  }
+
+  -- undotree
+  use {'mbbill/undotree'} 
+  
+
   ---- airline
   ----use "vim-airline/vim-airline"
   ----use "vim-airline/vim-airline-themes"
