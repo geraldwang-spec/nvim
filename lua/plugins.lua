@@ -68,10 +68,10 @@ return require('packer').startup(function(use)
   -- undotree
   use {'mbbill/undotree'} 
   
+  -- airline
+  --use "vim-airline/vim-airline"
+  --use "vim-airline/vim-airline-themes"
 
-  ---- airline
-  ----use "vim-airline/vim-airline"
-  ----use "vim-airline/vim-airline-themes"
   --
   ---- LSP
   --use "williamboman/nvim-lsp-installer" -- simple to use language server installer
@@ -102,8 +102,8 @@ return require('packer').startup(function(use)
   --use "p00f/nvim-ts-rainbow"
   --use "nvim-treesitter/playground"
 
-  ---- autopair
-  --use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
+  -- autopair
+  use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
 
   ---- comment
   --use "numToStr/Comment.nvim" -- Easily comment stuff
