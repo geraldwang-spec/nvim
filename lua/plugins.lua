@@ -123,8 +123,8 @@ return require('packer').startup(function(use)
   --use "akinsho/bufferline.nvim"
   --use "moll/vim-bbye"
 
-  ---- Null-ls
-  --use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
+  -- Null-ls
+  use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
 
   ---- lualine
   --use "nvim-lualine/lualine.nvim"
