@@ -64,6 +64,7 @@ return require('packer').startup(function(use)
     "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
   }
+  use { "nvim-telescope/telescope-project.nvim" }
 
   -- undotree
   use {'mbbill/undotree'} 
@@ -132,8 +133,8 @@ return require('packer').startup(function(use)
   ---- toggleterm
   --use "akinsho/toggleterm.nvim"
 
-  ---- Project
-  --use "ahmedkhalf/project.nvim"
+  -- Project
+  use "ahmedkhalf/project.nvim"
 
   ---- impatient
   --use "lewis6991/impatient.nvim"
