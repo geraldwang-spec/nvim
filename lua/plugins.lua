@@ -65,6 +65,7 @@ return require('packer').startup(function(use)
     run = ":TSUpdate",
   }
   use { "nvim-telescope/telescope-project.nvim" }
+  use {"nvim-telescope/telescope-file-browser.nvim"}
 
   -- undotree
   use {'mbbill/undotree'} 
