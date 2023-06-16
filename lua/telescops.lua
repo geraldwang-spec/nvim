@@ -19,6 +19,7 @@ vim.keymap.set('n', 'ff', builtin.find_files,{})
 vim.keymap.set('n', 'fg', builtin.git_files,{})
 vim.keymap.set('n', 'fs', function()
         local opt = {
+          -- cwd = vim.fn.systemlist("git rev-parse --show-toplevel")[1],
           search = vim.fn.expand("<cword>" .. vim.fn.expand("<cword>")),
         }
         builtin.grep_string(opt)

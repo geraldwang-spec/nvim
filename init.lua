@@ -9,4 +9,6 @@ require "autopairs"
 require "lsp"
 require "lsp.cmp"
 require "project"
+require "tools.git.gitsigns"
 require "autocommand"
+

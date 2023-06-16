@@ -98,6 +98,16 @@ return require('packer').startup(function(use)
   use "L3MON4D3/LuaSnip" --snippet engine
   use "rafamadriz/friendly-snippets" -- a bunch of snippets to use 
 
+  -- autopair
+  use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
+  -- Null-ls
+  use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
+  -- Project
+  use "ahmedkhalf/project.nvim"
+
+  -- git
+  use { "lewis6991/gitsigns.nvim" }
+
   ---- Telescope
   --use "nvim-telescope/telescope.nvim"
   --use 'nvim-telescope/telescope-media-files.nvim'
@@ -110,8 +120,6 @@ return require('packer').startup(function(use)
   --use "p00f/nvim-ts-rainbow"
   --use "nvim-treesitter/playground"
 
-  -- autopair
-  use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
 
   ---- comment
   --use "numToStr/Comment.nvim" -- Easily comment stuff
@@ -125,8 +133,6 @@ return require('packer').startup(function(use)
   --use "akinsho/bufferline.nvim"
   --use "moll/vim-bbye"
 
-  -- Null-ls
-  use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
 
   ---- lualine
   --use "nvim-lualine/lualine.nvim"
@@ -134,8 +140,6 @@ return require('packer').startup(function(use)
   ---- toggleterm
   --use "akinsho/toggleterm.nvim"
 
-  -- Project
-  use "ahmedkhalf/project.nvim"
 
   ---- impatient
   --use "lewis6991/impatient.nvim"
