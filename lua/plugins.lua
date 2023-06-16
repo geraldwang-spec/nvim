@@ -64,6 +64,9 @@ return require('packer').startup(function(use)
     "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
   }
+  use "p00f/nvim-ts-rainbow"
+  use "nvim-treesitter/playground"
+
   use { "nvim-telescope/telescope-project.nvim" }
   use {"nvim-telescope/telescope-file-browser.nvim"}
 
@@ -109,22 +112,9 @@ return require('packer').startup(function(use)
   use { "lewis6991/gitsigns.nvim" }
   use { "sindrets/diffview.nvim" }
 
-  ---- Telescope
-  --use "nvim-telescope/telescope.nvim"
-  --use 'nvim-telescope/telescope-media-files.nvim'
-
-  -- -- Treesitter
-  --use {
-  --  "nvim-treesitter/nvim-treesitter",
-  --  run = ":TSUpdate",
-  --}
-  --use "p00f/nvim-ts-rainbow"
-  --use "nvim-treesitter/playground"
-
-
-  ---- comment
-  --use "numToStr/Comment.nvim" -- Easily comment stuff
-  --use 'JoosepAlviste/nvim-ts-context-commentstring'
+  -- comment
+  use "numToStr/Comment.nvim" -- Easily comment stuff
+  use 'JoosepAlviste/nvim-ts-context-commentstring'
 
   ---- nvim tree
   --use 'kyazdani42/nvim-web-devicons'
