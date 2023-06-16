@@ -116,10 +116,10 @@ return require('packer').startup(function(use)
   use "numToStr/Comment.nvim" -- Easily comment stuff
   use 'JoosepAlviste/nvim-ts-context-commentstring'
 
-  ---- nvim tree
-  --use 'kyazdani42/nvim-web-devicons'
-  --use 'kyazdani42/nvim-tree.lua'
-  --
+  -- nvim tree
+  use 'kyazdani42/nvim-web-devicons'
+  use 'kyazdani42/nvim-tree.lua'
+  
   ---- bufferline
   --use "akinsho/bufferline.nvim"
   --use "moll/vim-bbye"

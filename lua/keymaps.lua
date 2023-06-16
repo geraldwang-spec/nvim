@@ -67,7 +67,7 @@ keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
 
 --------------------------------------------------------------
 
-keymap("n", "<F2>", ":Lex 30<cr>", opts)
+--[[ keymap("n", "<F2>", ":Lex 30<cr>", opts) ]]
 
 keymap("n", "qc", ":q!<CR>", opts)
 keymap("n", "qa", ":wq<CR>", opts)

@@ -12,5 +12,6 @@ require "project"
 require "tools.git.gitsigns"
 require "tools.git.diffview"
 require "tools.comment"
+require "tools.nvim-tree"
 require "autocommand"
 
