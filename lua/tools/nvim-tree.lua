@@ -16,14 +16,15 @@ vim.keymap.set('n', '<F2>', ":NvimTreeToggle<cr>")
 local tree_cb = nvim_tree_config.nvim_tree_callback
 
 nvim_tree.setup {
-    disable_netrw = true,
-    hijack_netrw = true,
-    open_on_setup = false,
-    ignore_ft_on_setup = {
-        "startify",
-        "dashboard",
-        "alpha",
-    },
+    --[[ disable_netrw = true, ]]
+    --[[ hijack_netrw = true, ]]
+    --[[ open_on_setup = false, ]]
+    --[[ ignore_ft_on_setup = { ]]
+    --[[     "startify", ]]
+    --[[     "dashboard", ]]
+    --[[     "alpha", ]]
+    --[[ }, ]]
+    sort_by = "name",
     open_on_tab = false,
     hijack_cursor = false,
     update_cwd = true,
@@ -33,6 +34,7 @@ nvim_tree.setup {
     },
     diagnostics = {
         enable = true,
+        show_on_dirs = true,
         icons = {
             hint = "h",
             info = "i",
@@ -52,28 +54,30 @@ nvim_tree.setup {
     },
     view = {
         width = 30,
-        height = 30,
+        --[[ height = 30, ]]
         hide_root_folder = false,
         side = "left",
-        auto_resize = true,
+        --[[ auto_resize = true, ]]
         mappings = {
             custom_only = false,
-            list = {
-            { key = { "l", "<CR>", "o" }, cb = tree_cb "edit" },
-            { key = "h", cb = tree_cb "close_node" },
-            { key = "v", cb = tree_cb "vsplit" },
-            },
+            --[[ list = { ]]
+            --[[ { key = { "l", "<CR>", "o" }, cb = tree_cb "edit" }, ]]
+            --[[ { key = "h", cb = tree_cb "close_node" }, ]]
+            --[[ { key = "v", cb = tree_cb "vsplit" }, ]]
+            --[[ }, ]]
         },
         number = false,
         relativenumber = false,
     },
     actions = {
-        quit_on_open = true,
-        window_picker = { enable = true },
+        --[[ quit_on_open = true, ]]
+        --[[ window_picker = { enable = true }, ]]
     },
     renderer = {
         highlight_git = true,
         root_folder_modifier = ":t",
+        special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
+        --[[ symlink_destination = true, ]]
         icons = {
             show = {
                 file = true,
@@ -99,6 +103,7 @@ nvim_tree.setup {
                     empty = " ",
                     empty_open = "|",
                     symlink = "~",
+                    
                 },
             }
         }
