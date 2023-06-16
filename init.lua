@@ -10,5 +10,6 @@ require "lsp"
 require "lsp.cmp"
 require "project"
 require "tools.git.gitsigns"
+require "tools.git.diffview"
 require "autocommand"
 
