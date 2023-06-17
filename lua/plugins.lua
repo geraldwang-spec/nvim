@@ -120,9 +120,9 @@ return require('packer').startup(function(use)
   use 'kyazdani42/nvim-web-devicons'
   use 'kyazdani42/nvim-tree.lua'
   
-  ---- bufferline
-  --use "akinsho/bufferline.nvim"
-  --use "moll/vim-bbye"
+  -- bufferline
+  use "akinsho/bufferline.nvim"
+  use "moll/vim-bbye"
 
 
   ---- lualine
