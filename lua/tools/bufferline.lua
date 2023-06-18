@@ -4,8 +4,8 @@ if not status_ok then
   return
 end
 
-vim.keymap.set('n', '<A-.>', ":BufferLineCycleNext<CR>")
-vim.keymap.set('n', '<A-,>', ":BufferLineCyclePrev<CR>")
+vim.keymap.set('n', '<A-l>', ":BufferLineCycleNext<CR>")
+vim.keymap.set('n', '<A-h>', ":BufferLineCyclePrev<CR>")
 
 bufferline.setup {
 options = {
