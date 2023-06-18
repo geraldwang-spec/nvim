@@ -128,8 +128,8 @@ return require('packer').startup(function(use)
   ---- lualine
   --use "nvim-lualine/lualine.nvim"
 
-  ---- toggleterm
-  --use "akinsho/toggleterm.nvim"
+  -- toggleterm
+  use "akinsho/toggleterm.nvim"
 
 
   ---- impatient

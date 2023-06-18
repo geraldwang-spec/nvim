@@ -14,5 +14,6 @@ require "tools.git.diffview"
 require "tools.comment"
 require "tools.nvim-tree"
 require "tools.bufferline"
+require "tools.toggleterm"
 require "autocommand"
 
