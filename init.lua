@@ -15,5 +15,8 @@ require "tools.comment"
 require "tools.nvim-tree"
 require "tools.bufferline"
 require "tools.toggleterm"
+require "tools.impatient"
+require "tools.alpha"
+require "tools.whichkey"
 require "autocommand"
 

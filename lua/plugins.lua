@@ -132,18 +132,18 @@ return require('packer').startup(function(use)
   use "akinsho/toggleterm.nvim"
 
 
-  ---- impatient
-  --use "lewis6991/impatient.nvim"
+  -- impatient
+  use "lewis6991/impatient.nvim"
 
-  ---- indent
-  --use "lukas-reineke/indent-blankline.nvim"
+  -- indent
+  use "lukas-reineke/indent-blankline.nvim"
 
-  ---- alpha
-  --use 'goolord/alpha-nvim'
-  --use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
+  -- alpha
+  use 'goolord/alpha-nvim'
+  use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
 
-  ---- which key 
-  --use "folke/which-key.nvim"
+  -- which key 
+  use "folke/which-key.nvim"
 
 
 
