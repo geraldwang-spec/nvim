@@ -125,6 +125,7 @@ local mappings = {
     c = { "<cmd>Telescope git_commits<cr>", "Checkout commit" },
     d = {
       name = "Diffview",
+      a = {"<cmd>DiffviewFileHistory --all<cr>", "File History All"},
       c = {"<cmd>DiffviewClose<cr>", "Close"},
       f = {"<cmd>DiffviewFileHistory<cr>", "File History"},
       F = {"<cmd>DiffviewFocusFiles<CR>", "Focus Files"},
