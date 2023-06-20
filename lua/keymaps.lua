@@ -18,6 +18,7 @@ vim.g.maplocalleader = " "
 --   term_mode = "t",
 --   command_mode = "c",
 --------------------------------------------------------------------
+--[[ keymap("n", "<F3>", "/" .. vim.fn.expand("<cword>" .. vim.fn.expand("<cword>")) .. "<CR>", opts) ]]
 
 -- Normal --
 -- Better window navigation

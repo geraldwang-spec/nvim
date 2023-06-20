@@ -8,6 +8,9 @@ local servers = {
 	"jsonls",
 	-- "yamlls",
   "clangd",
+  "csharp_ls",
+  "omnisharp",
+  -- "omnisharp_mono", 
 }
 
 local settings = {
