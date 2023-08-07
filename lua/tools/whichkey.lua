@@ -133,6 +133,10 @@ local mappings = {
       r = {"<cmd>DiffviewRefresh<CR>", "Refresh"},
       o = {"<cmd>DiffviewOpen<cr>", "Open"},
     },
+    f = {
+      name = "Flog",
+      o = {"<cmd>Flog<cr>", "Open log"},
+    }
     --[[ d = { ]]
     --[[   "<cmd>Gitsigns diffthis HEAD<cr>", ]]
     --[[   "Diff", ]]
@@ -191,6 +195,10 @@ local mappings = {
     f = { "<cmd>ToggleTerm direction=float<cr>", "Float" },
     h = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", "Horizontal" },
     v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },
+  },
+  k = {
+    name = "key map",
+    n = {"", "'gq': close Flog windows"},
   },
 }
 

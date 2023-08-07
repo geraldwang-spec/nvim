@@ -145,7 +145,9 @@ return require('packer').startup(function(use)
   -- which key 
   use "folke/which-key.nvim"
 
-
+  -- Flog
+  use 'tpope/vim-fugitive'
+  use 'rbong/vim-flog'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
