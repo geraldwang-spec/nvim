@@ -6,14 +6,14 @@ if not status_ok then
     return
 end
 
-local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
-if not config_status_ok then
-    return
-end
+--[[ local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config") ]]
+--[[ if not config_status_ok then ]]
+--[[     return ]]
+--[[ end ]]
 
 vim.keymap.set('n', '<F2>', ":NvimTreeToggle<cr>")
 
-local tree_cb = nvim_tree_config.nvim_tree_callback
+--[[ local tree_cb = nvim_tree_config.nvim_tree_callback ]]
 
 nvim_tree.setup {
     --[[ disable_netrw = true, ]]
@@ -55,17 +55,17 @@ nvim_tree.setup {
     view = {
         width = 30,
         --[[ height = 30, ]]
-        hide_root_folder = false,
+        --[[ hide_root_folder = false, ]]
         side = "left",
         --[[ auto_resize = true, ]]
-        mappings = {
-            custom_only = false,
+        --[[ mappings = { ]]
+            --[[ custom_only = false, ]]
             --[[ list = { ]]
             --[[ { key = { "l", "<CR>", "o" }, cb = tree_cb "edit" }, ]]
             --[[ { key = "h", cb = tree_cb "close_node" }, ]]
             --[[ { key = "v", cb = tree_cb "vsplit" }, ]]
             --[[ }, ]]
-        },
+        --[[ }, ]]
         number = false,
         relativenumber = false,
     },

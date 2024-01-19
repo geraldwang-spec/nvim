@@ -5,10 +5,10 @@ local servers = {
 	-- "tsserver",
 	"pyright",
 	-- "bashls",
-	"jsonls",
+	--[[ "jsonls", ]]
 	-- "yamlls",
   "clangd",
-  "csharp_ls",
+  --[[ "csharp_ls", ]]
   "omnisharp",
   -- "omnisharp_mono", 
 }
