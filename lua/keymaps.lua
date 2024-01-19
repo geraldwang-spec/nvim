@@ -124,5 +124,6 @@ keymap("n", "<leader>gg", ":lua require'telescope.builtin'.grep_string({search =
 keymap("n", "tt", "<cmd>TSPlaygroundToggle<CR>", opts)
 ]]
 ------------------------------------------------------------------
-
-
+vim.keymap.set("n", "<F3>", function()
+  vim.cmd("/" .. vim.fn.expand("<cword>" .. vim.fn.expand("<cword>")))
+end)
