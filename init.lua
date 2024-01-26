@@ -19,4 +19,4 @@ require "tools.impatient"
 require "tools.alpha"
 require "tools.whichkey"
 require "autocommand"
-
+require "tools.cscope"
