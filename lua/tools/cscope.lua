@@ -4,6 +4,7 @@ if not status_ok then
   return
 end
 
+
 local opts = {
   -- maps related defaults
   disable_maps = true, -- "true" disables default keymaps
@@ -45,6 +46,11 @@ if not maps_ok then
   return
 end
 
+function cscopeBuild()
+  os.execute([[find ./ -type f -name "*.h" -o -name "*.c" > cscope.file]])
+  vim.cmd([[Cscope build]])
+end
+
 function cscope_keymaps(prefix)
 	local sym_map = maphelp.sym_map
 	local ok, wk = pcall(require, "which-key")
@@ -63,7 +69,8 @@ function cscope_keymaps(prefix)
       i = {maphelp.get_cscope_prompt_cmd("i", "w"), sym_map.i},
       d = {maphelp.get_cscope_prompt_cmd("d", "w"), sym_map.d},
       a = {maphelp.get_cscope_prompt_cmd("a", "w"), sym_map.a},
-      b = {"<cmd>Cscope build<cr>", sym_map.b},
+      --[[ b = {"<cmd>Cscope build<cr>", sym_map.b}, ]]
+      b = {cscopeBuild, sym_map.b}
     }})
 end
 cscope_keymaps(opts.prefix)
@@ -95,6 +102,8 @@ function lines_from(file)
   end
   return lines
 end
+
+
 
 --[[ local filePath = vim.fn.expand("%:p:h") .. "/.qoo" ]]
 --[[ print(filePath) ]]
