@@ -157,6 +157,9 @@ return require('packer').startup(function(use)
       "nvim-tree/nvim-web-devicons", -- optional [for devicons in telescope or fzf]
   }}
 
+  -- nvim-dap
+  use {"mfussenegger/nvim-dap"}
+
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if PACKER_BOOTSTRAP then
