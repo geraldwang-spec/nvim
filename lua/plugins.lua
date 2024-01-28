@@ -76,8 +76,6 @@ return require('packer').startup(function(use)
   -- airline
   --use "vim-airline/vim-airline"
   --use "vim-airline/vim-airline-themes"
-
-  --
   -- LSP
   --use "williamboman/nvim-lsp-installer" -- simple to use language server installer
   --use "neovim/nvim-lspconfig"           -- enable LSP
@@ -99,6 +97,7 @@ return require('packer').startup(function(use)
 
   -- snippets
   use "L3MON4D3/LuaSnip" --snippet engine
+  use "saadparwaiz1/cmp_luasnip"
   use "rafamadriz/friendly-snippets" -- a bunch of snippets to use 
 
   -- autopair
