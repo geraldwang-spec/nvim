@@ -4,7 +4,11 @@ if not ibl_ok then
   return;
 end
 
-ibl.setup()
+ibl.setup({
+  indent = {
+    char = "│"
+  }
+})
 
 --[[ local status_ok, indent_blankline = pcall(require, "indent_blankline") ]]
 --[[ if not status_ok then ]]

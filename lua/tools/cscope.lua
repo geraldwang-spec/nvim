@@ -18,7 +18,7 @@ local opts = {
     -- cscope executable
     exec = "cscope", -- "cscope" or "gtags-cscope"
     -- choose your fav picker
-    picker = "telescope", -- "telescope", "fzf-lua" or "quickfix"
+    picker = "quickfix", -- "telescope", "fzf-lua" or "quickfix"
     -- size of quickfix window
     qf_window_size = 5, -- any positive integer
     -- position of quickfix window
