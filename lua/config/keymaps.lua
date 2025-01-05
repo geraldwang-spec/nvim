@@ -112,3 +112,5 @@ vim.keymap.set("n", "tt", "<cmd>TSPlaygroundToggle<CR>", opts)
 vim.keymap.set("n", "<F3>", function()
   vim.cmd("/" .. vim.fn.expand("<cword>" .. vim.fn.expand("<cword>")))
 end)
+
+vim.keymap.set("n", "gb", "<C-o>") -- this is for lsp go back from definition
