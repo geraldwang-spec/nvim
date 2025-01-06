@@ -4,8 +4,8 @@ if not status_ok then
   return
 end
 
-local status_ok, masonlsp = pcall(require, "mason-lspconfig")
-if not status_ok then
+local masonlsp_ok, masonlsp = pcall(require, "mason-lspconfig")
+if not masonlsp_ok then
   vim.notify("mason-lspconfig fail")
   return
 end
@@ -80,7 +80,7 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 vim.keymap.set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>") -- this is for lsp go back from definition
 
 local opts = function()
-  local keys = require("lazyvim.plugins.lsp.keymaps").get()
+  -- local keys = require("lazyvim.plugins.lsp.keymaps").get()
   -- keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
   -- keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
   -- keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
