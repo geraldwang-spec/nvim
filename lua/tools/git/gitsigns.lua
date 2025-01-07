@@ -5,12 +5,18 @@ end
 
 gitsigns.setup{
   signs = {
-        add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
-        change       = {hl = 'GitSignsChange', text = '│', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
-        delete       = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-        topdelete    = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-        untracked    = {hl = 'GitSignsAdd',    text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
-        changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+        --[[ add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'}, ]]
+        --[[ change       = {hl = 'GitSignsChange', text = '│', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'}, ]]
+        --[[ delete       = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'}, ]]
+        --[[ topdelete    = {hl = 'GitSignsDelete', text = '-', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'}, ]]
+        --[[ untracked    = {hl = 'GitSignsAdd',    text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'}, ]]
+        --[[ changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'}, ]]
+        add          = { text = '+'}, 
+        change       = { text = '│'},
+        delete       = { text = '-'},
+        topdelete    = { text = '-'},
+        untracked    = { text = '+'},
+        changedelete = { text = '~'},
   },
   signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
   numhl = true, -- Toggle with `:Gitsigns toggle_numhl`
@@ -28,9 +34,9 @@ gitsigns.setup{
     delay = 1000,
     ignore_whitespace = false,
   },
-  current_line_blame_formatter_opts = {
-    relative_time = true,
-  },
+  --[[ current_line_blame_formatter_opts = { ]]
+  --[[   relative_time = true, ]]
+  --[[ }, ]]
   sign_priority = 6,
   update_debounce = 100,
   status_formatter = nil, -- Use default
@@ -43,9 +49,9 @@ gitsigns.setup{
     row = 0,
     col = 1,
   },
-  yadm = {
-    enable = false,
-  },
+  --[[ yadm = { ]]
+  --[[   enable = false, ]]
+  --[[ }, ]]
   on_attach = function(bufnr)
     local function map(mode, lhs, rhs, opts)
         opts = vim.tbl_extend('force', {noremap = true, silent = true}, opts or {})

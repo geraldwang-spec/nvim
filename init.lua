@@ -21,4 +21,7 @@ require "tools.alpha"
 require "tools.whichkey"
 require "autocommand"
 require "tools.cscope"
-require "tools.nvim-tree"
+--[[ require "tools.tagbar" ]]
+--[[ require "tools.projectCfg" ]]
+require "tools.flutterDap"
+require "tools.nvim-dap"

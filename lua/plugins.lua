@@ -77,13 +77,13 @@ return require('packer').startup(function(use)
   --use "vim-airline/vim-airline"
   --use "vim-airline/vim-airline-themes"
   -- LSP
-  --use "williamboman/nvim-lsp-installer" -- simple to use language server installer
-  --use "neovim/nvim-lspconfig"           -- enable LSP
-  --use "tamago324/nlsp-settings.nvim"    -- language server settings defined in json for
+  use "williamboman/nvim-lsp-installer" -- simple to use language server installer
+  use "neovim/nvim-lspconfig"           -- enable LSP
+  use "tamago324/nlsp-settings.nvim"    -- language server settings defined in json for
   use {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
-    "neovim/nvim-lspconfig",
+    -- "neovim/nvim-lspconfig",
   } 
 
   -- cmp plugins
@@ -96,8 +96,9 @@ return require('packer').startup(function(use)
   use "hrsh7th/cmp-nvim-lua"
 
   -- snippets
-  use "L3MON4D3/LuaSnip" --snippet engine
-  use "saadparwaiz1/cmp_luasnip"
+  -- use "L3MON4D3/LuaSnip" --snippet engine
+  use {"L3MON4D3/LuaSnip", run = "make install_jsregexp" }
+  -- use "saadparwaiz1/cmp_luasnip"
   use "rafamadriz/friendly-snippets" -- a bunch of snippets to use 
 
   -- autopair
@@ -143,6 +144,7 @@ return require('packer').startup(function(use)
 
   -- which key 
   use "folke/which-key.nvim"
+  use "echasnovski/mini.icons"
 
   -- Flog
   use 'tpope/vim-fugitive'
@@ -156,9 +158,26 @@ return require('packer').startup(function(use)
       "ibhagwan/fzf-lua", -- optional [for picker="fzf-lua"]
       "nvim-tree/nvim-web-devicons", -- optional [for devicons in telescope or fzf]
   }}
-
+  
   -- nvim-dap
   use {"mfussenegger/nvim-dap"}
+  use {'akinsho/flutter-tools.nvim'}
+  use {'nvim-lua/plenary.nvim'}
+  use {'stevearc/dressing.nvim'} -- 可选，用于支持 vim.ui.select
+  use {'jay-babu/mason-nvim-dap.nvim'}
+  use {'rcarriga/nvim-dap-ui'}
+  use {'nvim-neotest/nvim-nio'}
+
+  -- dadbod
+  use {"kristijanhusak/vim-dadbod-ui"} -- Database UI
+  use {"tpope/vim-dadbod"} -- Database management
+  use {"kristijanhusak/vim-dadbod-completion"} -- Autocompletion
+  use {"tpope/vim-dotenv"} -- Database UI  Not Committed Yet    
+
+  -- reload plugin
+  --[[ use {"MaximilianLloyd/lazy-reload.nvim"} ]]
+
+  use {"geraldwang-spec/projectCfg"}
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

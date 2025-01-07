@@ -11,6 +11,8 @@ local servers = {
   --[[ "csharp_ls", ]]
   "omnisharp",
   -- "omnisharp_mono", 
+  -- "ast_grep",
+  "dartls",
 }
 
 local settings = {

@@ -40,40 +40,45 @@ local opts = {
 
 cscope.setup(opts)
 
-local maps_ok, maphelp = pcall(require, 'utils.maps_helper')
-if not maps_ok then
-  vim.notify("cscope_maps.utils fail")
-  return
-end
+--[[ local maps_ok, maphelp = pcall(require, 'utils.maps_helper') ]]
+--[[ if not maps_ok then ]]
+--[[   vim.notify("cscope_maps.utils fail") ]]
+--[[   return ]]
+--[[ end ]]
 
-function cscopeBuild()
+--[[ function cscopeBuild() ]]
+--[[ end ]]
+
+vim.api.nvim_create_user_command('CscopeBuild',function()
   os.execute([[find ./ -type f -name "*.h" -o -name "*.c" > cscope.file]])
-  vim.cmd([[Cscope build]])
-end
+  vim.cmd([[Cs db add cscope.file]])
+  os.execute([[ctags -R]])
+  vim.cmd([[Cstag tags]])
+end,{})
 
-function cscope_keymaps(prefix)
-	local sym_map = maphelp.sym_map
-	local ok, wk = pcall(require, "which-key")
-  if not ok then
-    vim.notify("cscope load which-key fail")
-    return;
-  end
-  wk.register({
-    [prefix] = {
-      s = {maphelp.get_cscope_prompt_cmd("s", "w"), sym_map.s},
-      g = {maphelp.get_cscope_prompt_cmd("g", "w"), sym_map.g},
-      c = {maphelp.get_cscope_prompt_cmd("c", "w"), sym_map.c},
-      t = {maphelp.get_cscope_prompt_cmd("t", "w"), sym_map.t},
-      e = {maphelp.get_cscope_prompt_cmd("e", "w"), sym_map.e},
-      f = {maphelp.get_cscope_prompt_cmd("f", "w"), sym_map.f},
-      i = {maphelp.get_cscope_prompt_cmd("i", "w"), sym_map.i},
-      d = {maphelp.get_cscope_prompt_cmd("d", "w"), sym_map.d},
-      a = {maphelp.get_cscope_prompt_cmd("a", "w"), sym_map.a},
-      --[[ b = {"<cmd>Cscope build<cr>", sym_map.b}, ]]
-      b = {cscopeBuild, sym_map.b}
-    }})
-end
-cscope_keymaps(opts.prefix)
+--[[ function cscope_keymaps(prefix) ]]
+--[[ 	local sym_map = maphelp.sym_map ]]
+--[[ 	local ok, wk = pcall(require, "which-key") ]]
+--[[   if not ok then ]]
+--[[     vim.notify("cscope load which-key fail") ]]
+--[[     return; ]]
+--[[   end ]]
+--[[   wk.register({ ]]
+--[[     [prefix] = { ]]
+--[[       s = {maphelp.get_cscope_prompt_cmd("s", "w"), sym_map.s}, ]]
+--[[       g = {maphelp.get_cscope_prompt_cmd("g", "w"), sym_map.g}, ]]
+--[[       c = {maphelp.get_cscope_prompt_cmd("c", "w"), sym_map.c}, ]]
+--[[       t = {maphelp.get_cscope_prompt_cmd("t", "w"), sym_map.t}, ]]
+--[[       e = {maphelp.get_cscope_prompt_cmd("e", "w"), sym_map.e}, ]]
+--[[       f = {maphelp.get_cscope_prompt_cmd("f", "w"), sym_map.f}, ]]
+--[[       i = {maphelp.get_cscope_prompt_cmd("i", "w"), sym_map.i}, ]]
+--[[       d = {maphelp.get_cscope_prompt_cmd("d", "w"), sym_map.d}, ]]
+--[[       a = {maphelp.get_cscope_prompt_cmd("a", "w"), sym_map.a}, ]]
+--[[       b = {"<cmd>Cscope build<cr>", sym_map.b}, ]]
+--[[       b = {cscopeBuild, sym_map.b} ]]
+--[[     }}) ]]
+--[[ end ]]
+--[[ cscope_keymaps(opts.prefix) ]]
 
 vim.keymap.set("n", "<A-.>", function()
   vim.cmd("Cstag " .. vim.fn.expand("<cword>" .. vim.fn.expand("<cword>")))
