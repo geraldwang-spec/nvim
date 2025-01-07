@@ -13,7 +13,7 @@ wk.add({
   { "<leader>gD", group = "DiffView" },
   { "<leader>gDa", "<cmd>DiffviewFileHistory<cr>", desc = "File History All", mode = "n" },
   { "<leader>gDc", "<cmd>DiffviewClose<cr>", desc = "Close", mode = "n" },
-  { "<leader>gDf", "<cmd>DiffviewFileHistory<cr>", desc = "File History", mode = "n" },
+  { "<leader>gDf", "<cmd>DiffviewToggleFiles<cr>", desc = "Toggle Files", mode = "n" },
   { "<leader>gDF", "<cmd>DiffviewFocusFiles<CR>", desc = "Focus Files", mode = "n" },
   { "<leader>gDL", "<cmd>DiffviewLog<cr>", desc = "Log", mode = "n" },
   { "<leader>gDr", "<cmd>DiffviewRefresh<CR>", desc = "Refresh", mode = "n" },

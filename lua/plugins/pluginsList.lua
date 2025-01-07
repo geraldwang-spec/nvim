@@ -8,13 +8,7 @@ return {
     "nvim-neotest/nvim-nio",
     "theHamsta/nvim-dap-virtual-text",
   },
-  -- {
-  --   "saadparwaiz1/cmp_luasnip",
-  -- },
-  -- {
-  --   "L3MON4D3/LuaSnip",
-  -- },
-  -- {
-  --   "saadparwaiz1/cmp_luasnip",
-  -- },
+  {
+    "sindrets/diffview.nvim",
+  },
 }
