@@ -30,30 +30,30 @@ masonlsp.setup({
   ensure_installed = {
     "pyright",
     "clangd",
-    "csharp_ls",
+    -- "csharp-language-server ",
     -- "dart-debug-adapter",
     -- "dartls",
   },
   automatic_installation = true,
 })
 
-local signs = {
+-- local signs = {
+--
+--   { name = "DiagnosticSignError", text = "E" },
+--   { name = "DiagnosticSignWarn", text = "W" },
+--   { name = "DiagnosticSignHint", text = "H" },
+--   { name = "DiagnosticSignInfo", text = "I" },
+-- }
 
-  { name = "DiagnosticSignError", text = "E" },
-  { name = "DiagnosticSignWarn", text = "W" },
-  { name = "DiagnosticSignHint", text = "H" },
-  { name = "DiagnosticSignInfo", text = "I" },
-}
-
-for _, sign in ipairs(signs) do
-  vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-end
+-- for _, sign in ipairs(signs) do
+--   vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+-- end
 
 local config = {
   virtual_text = false, -- disable virtual text
-  signs = {
-    active = signs, -- show signs
-  },
+  -- signs = {
+  --   active = signs, -- show signs
+  -- },
   update_in_insert = true,
   underline = true,
   severity_sort = true,
@@ -101,7 +101,7 @@ end
 lspconfig.dartls.setup({ opts })
 lspconfig.pyright.setup({ opts })
 lspconfig.clangd.setup({ opts })
-lspconfig.csharp_ls.setup({ opts })
+-- lspconfig.csharp_ls.setup({ opts })
 
 local cmp_status_ok, cmp = pcall(require, "cmp")
 if not cmp_status_ok then

@@ -4,6 +4,37 @@ if not dap_ok then
   return
 end
 
+-- keymaps
+vim.keymap.set("n", "dc", function()
+  require("dap").continue()
+end)
+vim.keymap.set("n", "do", function()
+  require("dap").step_over()
+end)
+vim.keymap.set("n", "di", function()
+  require("dap").step_into()
+end)
+vim.keymap.set("n", "db", function()
+  require("dap").toggle_breakpoint()
+end)
+-- vim.keymap.set({ "n", "v" }, "dh", function()
+--   require("dap.ui.widgets").hover()
+-- end)
+-- vim.keymap.set({ "n", "v" }, "dp", function()
+--   require("dap.ui.widgets").preview()
+-- end)
+-- vim.keymap.set("n", "df", function()
+--   local widgets = require("dap.ui.widgets")
+--   widgets.centered_float(widgets.frames)
+-- end)
+-- vim.keymap.set("n", "ds", function()
+--   local widgets = require("dap.ui.widgets")
+--   widgets.centered_float(widgets.scopes)
+-- end)
+-- vim.keymap.set("n", "<F12>", function()
+--   require("dap").step_out()
+-- end)
+
 -- 定義獲取當前工作目錄的函數
 local function get_project_root()
   local current_buf = vim.api.nvim_get_current_buf()
