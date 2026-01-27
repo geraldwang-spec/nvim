@@ -1,7 +1,7 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
---
+
 -- undotree
 vim.keymap.set("n", "<F5>", vim.cmd.UndotreeToggle)
 -- nvim-tree
@@ -114,3 +114,5 @@ vim.keymap.set("n", "<F3>", function()
 end)
 
 vim.keymap.set("n", "gb", "<C-o>") -- this is for lsp go back from definition
+vim.keymap.del("i", "<Tab>")
+vim.keymap.del("i", "<S-Tab>")

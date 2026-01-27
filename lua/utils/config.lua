@@ -1,0 +1,8 @@
+require("utils.nvim-tree")
+require("utils.toggletermConf")
+require("utils.telescopeConf")
+require("utils.simulatorsConf")
+require("utils.flutter_tools")
+require("utils.diffview")
+require("utils.dapConf")
+require("utils.mason")

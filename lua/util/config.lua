@@ -1,7 +1,0 @@
-require("util.toggletermConf")
-require("util.telescopeConf")
-require("util.mason")
-require("util.dapConf")
-require("util.diffview")
-require("util.flutter_tools")
-require("util.simulatorsConf")

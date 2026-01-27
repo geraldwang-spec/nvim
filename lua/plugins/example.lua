@@ -33,7 +33,17 @@ return {
   -- override nvim-cmp and add cmp-emoji
   {
     "hrsh7th/nvim-cmp",
-    dependencies = { "hrsh7th/cmp-emoji" },
+    dependencies = {
+      "hrsh7th/cmp-emoji",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      -- "hrsh7th/cmp-cmdline",
+      -- "hrsh7th/nvim-cmp",
+      -- -- for vsnip users
+      -- "hrsh7th/cmp-vsnip",
+      -- "hrsh7th/vim-vsnip",
+    },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       table.insert(opts.sources, { name = "emoji" })
