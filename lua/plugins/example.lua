@@ -144,6 +144,7 @@ return {
         "typescript",
         "vim",
         "yaml",
+        "c_sharp",
       },
     },
   },

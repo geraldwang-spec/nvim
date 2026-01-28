@@ -5,6 +5,9 @@ M.servers = {
   "pyright", -- Python
   "lua_ls", -- Lua
   "ts_ls", -- TypeScript / JavaScript
+  -- "cmakelang",
+  -- "cmakelint",
+  -- "ast-grep",
   --"gopls", -- Go
   -- "stylua",
   -- "shellcheck",

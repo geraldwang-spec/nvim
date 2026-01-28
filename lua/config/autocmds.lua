@@ -6,3 +6,13 @@
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+require("utils.pyproject")
+
+vim.api.nvim_create_user_command("NewPyProject", function(opts)
+  local project_name = opts.args
+  if project_name == "" then
+    print("please enter project name")
+    return
+  end
+  _G.NewPyProjectAuto(project_name)
+end, { nargs = 1 })
