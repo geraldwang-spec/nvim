@@ -1,49 +1,82 @@
 local uv = vim.loop
 local fn = vim.fn
--- local json = vim.fn.json_encode
 local json = require("dkjson")
 
--- Helper: 取得 src 下子模組
+-- 取得 src 下的所有子模組
 local function list_submodules(src_path)
   local modules = {}
   local handle = uv.fs_scandir(src_path)
-  if handle then
-    while true do
-      local name, type = uv.fs_scandir_next(handle)
-      if not name then
-        break
-      end
-      if type == "directory" then
-        table.insert(modules, name)
-      end
+  if not handle then
+    return modules
+  end
+
+  while true do
+    local name, t = uv.fs_scandir_next(handle)
+    if not name then
+      break
+    end
+    if t == "directory" then
+      table.insert(modules, name)
     end
   end
   return modules
 end
 
-function NewPyProjectAuto(project_name)
-  if not project_name or project_name == "" then
-    print("請提供專案名稱")
+-- 建立 __init__.py
+local function touch_init(path)
+  local f = io.open(path .. "/__init__.py", "w")
+  if f then
+    f:close()
+  end
+end
+
+-- 主函式
+function NewPyProjectAuto(name)
+  if not name or name == "" then
+    print("❌ 請提供名稱")
     return
   end
 
   local cwd = fn.getcwd()
-  local project_path = cwd .. "/" .. project_name
 
-  if uv.fs_stat(project_path) then
-    print("專案已存在: " .. project_path)
-    return
-  end
+  -- 判斷「目前目錄是不是 Python 專案根」
+  local is_project_root = uv.fs_stat(cwd .. "/pyproject.toml") ~= nil
+    and uv.fs_stat(cwd .. "/pyrightconfig.json") ~= nil
+    and uv.fs_stat(cwd .. "/src") ~= nil
 
-  -- 1️⃣ 建立目錄
-  uv.fs_mkdir(project_path, 448)
-  uv.fs_mkdir(project_path .. "/src", 448)
-  uv.fs_mkdir(project_path .. "/tests", 448)
+  local project_path
+  local src_path
+  local tests_path
+  local module_name = name
 
-  -- 先建立 pyproject.toml
-  local pyproject_file = project_path .. "/pyproject.toml"
-  local pyproject_content = string.format(
-    [[
+  if is_project_root then
+    -- 🟢 在現有專案中新增模組
+    project_path = cwd
+    src_path = cwd .. "/src"
+    tests_path = cwd .. "/tests"
+
+    if uv.fs_stat(src_path .. "/" .. module_name) then
+      print("❌ src 下已存在模組：" .. module_name)
+      return
+    end
+  else
+    -- 🟡 建立新專案
+    project_path = cwd .. "/" .. name
+    src_path = project_path .. "/src"
+    tests_path = project_path .. "/tests"
+
+    if uv.fs_stat(project_path) then
+      print("❌ 專案已存在：" .. project_path)
+      return
+    end
+
+    uv.fs_mkdir(project_path, 448)
+    uv.fs_mkdir(src_path, 448)
+    uv.fs_mkdir(tests_path, 448)
+
+    -- pyproject.toml
+    local pyproject = string.format(
+      [[
 [tool.poetry]
 name = "%s"
 version = "0.1.0"
@@ -61,8 +94,7 @@ include = ["src"]
 exclude = [
   "**/node_modules",
   "**/__pycache__",
-  "src/experimental",
-  "src/typestubs"
+  "src/**/typestubs"
 ]
 pythonVersion = "3.10"
 pythonPlatform = "Linux"
@@ -71,76 +103,74 @@ pythonPlatform = "Linux"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 ]],
-    project_name
-  )
+      name
+    )
 
-  local f = io.open(pyproject_file, "w")
-  if f then
-    f:write(pyproject_content)
-    f:close()
+    local f = io.open(project_path .. "/pyproject.toml", "w")
+    if f then
+      f:write(pyproject)
+      f:close()
+    end
   end
 
-  -- 2️⃣ 掃描 src/ 子模組，建立 typestubs + executionEnvironments
-  local src_path = project_path .. "/src"
+  -- 建立模組本體
+  local mod_path = src_path .. "/" .. module_name
+  uv.fs_mkdir(mod_path, 448)
+  uv.fs_mkdir(mod_path .. "/typestubs", 448)
+  touch_init(mod_path)
+  touch_init(mod_path .. "/typestubs")
+
+  -- 重新掃描 src
   local modules = list_submodules(src_path)
+
+  -- 建立 executionEnvironments
   local executionEnvs = {}
   local extra_paths = {}
+
   for _, mod in ipairs(modules) do
-    uv.fs_mkdir(src_path .. "/" .. mod .. "/typestubs", 448)
+    local p = "src/" .. mod
+    table.insert(extra_paths, p)
     table.insert(executionEnvs, {
-      root = "src/" .. mod,
+      root = p,
       pythonVersion = "3.10",
-      extraPaths = { "src/" .. mod },
+      extraPaths = { p },
       typeCheckingMode = "strict",
     })
-    table.insert(extra_paths, "src/" .. mod)
   end
 
-  -- 對 tests 也生成 environment
+  -- tests environment（一定有 extraPaths）
   table.insert(executionEnvs, {
     root = "tests",
     pythonVersion = "3.10",
-    -- extraPaths = modules, -- tests 可以 import 所有 src 子模組
     extraPaths = extra_paths,
     typeCheckingMode = "strict",
   })
 
-  -- 3️⃣ pyrightconfig.json (包含 executionEnvironments)
-  local pyright_json_file = project_path .. "/pyrightconfig.json"
-  local pyright_config = {
+  -- pyrightconfig.json
+  local pyright = {
     typeCheckingMode = "standard",
     autoSearchPaths = true,
     useLibraryCodeForTypes = true,
     reportMissingImports = "error",
     reportMissingTypeStubs = false,
-    stubPath = "src/" .. (modules[1] or project_name) .. "/typestubs",
+    stubPath = "src/" .. module_name .. "/typestubs",
     executionEnvironments = executionEnvs,
   }
 
-  local json_str = json.encode(pyright_config, { indent = true })
-  local f = io.open(pyright_json_file, "w")
+  local f = io.open(project_path .. "/pyrightconfig.json", "w")
   if f then
-    f:write(json_str)
+    f:write(json.encode(pyright, { indent = true }))
     f:close()
-  else
-    print("fail loaded " .. pyright_json_file)
   end
 
-  -- local fjson = io.open(pyright_json_file, "w")
-  -- if fjson then
-  --   fjson:write(vim.fn.json_encode(pyright_config))
-  --   fjson:close()
-  -- end
+  -- 新專案才跑 poetry
+  if not is_project_root then
+    os.execute(string.format("cd %s && poetry install", project_path))
+  end
 
-  -- 4️⃣ 初始化 Poetry 虛擬環境
-  os.execute(string.format("cd %s && poetry install", project_path))
-
-  print("✅ 進階自動專案生成完成: " .. project_path)
-  print("   - pyproject.toml (通用設定)")
-  print("   - pyrightconfig.json (LSP override + executionEnvironments)")
-  print("   - src/ + typestubs + tests/")
-  print("   - Poetry 虛擬環境已建立")
+  print("✅ 完成")
+  print("   模組：" .. module_name)
+  print("   專案位置：" .. project_path)
 end
 
--- 全域函式
 _G.NewPyProjectAuto = NewPyProjectAuto
