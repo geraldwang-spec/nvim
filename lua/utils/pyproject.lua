@@ -2,12 +2,26 @@ local uv = vim.loop
 local fn = vim.fn
 local json = require("dkjson")
 
--- 取得 src 下的所有子模組
-local function list_submodules(src_path)
-  local modules = {}
-  local handle = uv.fs_scandir(src_path)
+local pythonVer = "3.10"
+local M = {}
+local function mkdir(path)
+  if not uv.fs_stat(path) then
+    uv.fs_mkdir(path, 448)
+  end
+end
+
+local function touch(path)
+  local f = io.open(path, "w")
+  if f then
+    f:close()
+  end
+end
+
+local function list_py_files(dir)
+  local files = {}
+  local handle = uv.fs_scandir(dir)
   if not handle then
-    return modules
+    return files
   end
 
   while true do
@@ -15,96 +29,123 @@ local function list_submodules(src_path)
     if not name then
       break
     end
-    if t == "directory" then
-      table.insert(modules, name)
+
+    if t == "file" and name:match("%.py$") and name ~= "__init__.py" and not name:match("^_") then
+      table.insert(files, name)
     end
   end
-  return modules
+
+  return files
 end
 
--- 建立 __init__.py
-local function touch_init(path)
-  local f = io.open(path .. "/__init__.py", "w")
-  if f then
-    f:close()
+local function parse_exports(file)
+  local exports = {}
+
+  for line in io.lines(file) do
+    -- local fn = line:match("^def%s+([%w_]+)")
+    -- local cls = line:match("^class%s+([%w_]+)")
+    local fn = line:match("^%s*def%s+([%w_]+)")
+    local cls = line:match("^%s*class%s+([%w_]+)")
+
+    local name = fn or cls
+    if name and not name:match("^_") then
+      table.insert(exports, name)
+    end
   end
+
+  return exports
 end
 
--- 主函式
-function NewPyProjectAuto(name)
+function M.generate_init(pkg_path)
+  local py_files = list_py_files(pkg_path)
+
+  local import_lines = {}
+  local all_symbols = {}
+  local seen = {}
+
+  for _, file in ipairs(py_files) do
+    local mod = file:gsub("%.py$", "")
+    local fullpath = pkg_path .. "/" .. file
+    local symbols = parse_exports(fullpath)
+
+    if #symbols > 0 then
+      table.insert(import_lines, string.format("from .%s import %s", mod, table.concat(symbols, ", ")))
+      for _, s in ipairs(symbols) do
+        if not seen[s] then
+          seen[s] = true
+          table.insert(all_symbols, s)
+        end
+      end
+    end
+  end
+
+  local f = io.open(pkg_path .. "/__init__.py", "w")
+  if not f then
+    return
+  end
+
+  for _, l in ipairs(import_lines) do
+    f:write(l .. "\n")
+  end
+
+  if #all_symbols > 0 then
+    f:write("\n__all__ = [\n")
+    for _, s in ipairs(all_symbols) do
+      f:write(string.format('    "%s",\n', s))
+    end
+    f:write("]\n")
+  end
+
+  f:close()
+end
+
+-- 主入口
+function M.NewPyProjectAuto(name)
   if not name or name == "" then
-    print("❌ 請提供名稱")
+    print("❌ 請提供專案 / 套件名稱")
     return
   end
 
   local cwd = fn.getcwd()
 
-  -- 判斷「目前目錄是不是 Python 專案根」
-  local is_project_root = uv.fs_stat(cwd .. "/pyproject.toml") ~= nil
-    and uv.fs_stat(cwd .. "/pyrightconfig.json") ~= nil
-    and uv.fs_stat(cwd .. "/src") ~= nil
+  local is_project_root = uv.fs_stat(cwd .. "/pyproject.toml")
+    and uv.fs_stat(cwd .. "/pyrightconfig.json")
+    and uv.fs_stat(cwd .. "/src")
 
-  local project_path
-  local src_path
-  local tests_path
-  local module_name = name
+  local project_path = is_project_root and cwd or (cwd .. "/" .. name)
+  local src_path = project_path .. "/src"
+  local tests_path = project_path .. "/tests"
+  local pkg_path = src_path .. "/" .. name
 
-  if is_project_root then
-    -- 🟢 在現有專案中新增模組
-    project_path = cwd
-    src_path = cwd .. "/src"
-    tests_path = cwd .. "/tests"
+  -- === 建立目錄 ===
+  mkdir(project_path)
+  mkdir(src_path)
+  mkdir(tests_path)
+  mkdir(pkg_path)
+  mkdir(pkg_path .. "/typestubs")
 
-    if uv.fs_stat(src_path .. "/" .. module_name) then
-      print("❌ src 下已存在模組：" .. module_name)
-      return
-    end
-  else
-    -- 🟡 建立新專案
-    project_path = cwd .. "/" .. name
-    src_path = project_path .. "/src"
-    tests_path = project_path .. "/tests"
+  if not uv.fs_stat(pkg_path .. "/__init__.py") then
+    touch(pkg_path .. "/__init__.py")
+  end
+  touch(pkg_path .. "/typestubs/__init__.py")
 
-    if uv.fs_stat(project_path) then
-      print("❌ 專案已存在：" .. project_path)
-      return
-    end
-
-    uv.fs_mkdir(project_path, 448)
-    uv.fs_mkdir(src_path, 448)
-    uv.fs_mkdir(tests_path, 448)
-
-    -- pyproject.toml
-    local pyproject = string.format(
-      [[
-[tool.poetry]
+  -- === pyproject.toml（只在新專案建立）===
+  if not is_project_root then
+    local pyproject = string.format([[
+[project]
 name = "%s"
 version = "0.1.0"
 description = ""
-authors = ["Gerald Wang <gerald@example.com>"]
+requires-python = ">=]] .. pythonVer .. [["
 
-[tool.poetry.dependencies]
-python = "^3.10"
-
-[tool.poetry.dev-dependencies]
-pytest = "^7.0"
-
-[tool.pyright]
-include = ["src"]
-exclude = [
-  "**/node_modules",
-  "**/__pycache__",
-  "src/**/typestubs"
-]
-pythonVersion = "3.10"
-pythonPlatform = "Linux"
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-]],
-      name
-    )
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+]], name)
 
     local f = io.open(project_path .. "/pyproject.toml", "w")
     if f then
@@ -113,48 +154,15 @@ build-backend = "poetry.core.masonry.api"
     end
   end
 
-  -- 建立模組本體
-  local mod_path = src_path .. "/" .. module_name
-  uv.fs_mkdir(mod_path, 448)
-  uv.fs_mkdir(mod_path .. "/typestubs", 448)
-  touch_init(mod_path)
-  touch_init(mod_path .. "/typestubs")
-
-  -- 重新掃描 src
-  local modules = list_submodules(src_path)
-
-  -- 建立 executionEnvironments
-  local executionEnvs = {}
-  local extra_paths = {}
-
-  for _, mod in ipairs(modules) do
-    local p = "src/" .. mod
-    table.insert(extra_paths, p)
-    table.insert(executionEnvs, {
-      root = p,
-      pythonVersion = "3.10",
-      extraPaths = { p },
-      typeCheckingMode = "strict",
-    })
-  end
-
-  -- tests environment（一定有 extraPaths）
-  table.insert(executionEnvs, {
-    root = "tests",
-    pythonVersion = "3.10",
-    extraPaths = extra_paths,
-    typeCheckingMode = "strict",
-  })
-
-  -- pyrightconfig.json
+  -- === pyrightconfig.json（永遠覆寫，保持正確）===
   local pyright = {
+    include = { "src", "tests" },
+    pythonVersion = pythonVer,
+    executionEnvironments = {
+      { root = "src" },
+    },
     typeCheckingMode = "standard",
-    autoSearchPaths = true,
-    useLibraryCodeForTypes = true,
-    reportMissingImports = "error",
     reportMissingTypeStubs = false,
-    stubPath = "src/" .. module_name .. "/typestubs",
-    executionEnvironments = executionEnvs,
   }
 
   local f = io.open(project_path .. "/pyrightconfig.json", "w")
@@ -163,14 +171,13 @@ build-backend = "poetry.core.masonry.api"
     f:close()
   end
 
-  -- 新專案才跑 poetry
-  if not is_project_root then
-    os.execute(string.format("cd %s && poetry install", project_path))
-  end
+  M.generate_init(pkg_path)
 
-  print("✅ 完成")
-  print("   模組：" .. module_name)
+  print("✅ Python src-layout 專案就緒")
   print("   專案位置：" .. project_path)
+  print("   套件名稱：" .. name)
 end
 
-_G.NewPyProjectAuto = NewPyProjectAuto
+_G.NewPyProjectAuto = M.NewPyProjectAuto
+
+return M
