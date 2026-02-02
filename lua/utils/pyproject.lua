@@ -4,180 +4,183 @@ local json = require("dkjson")
 
 local pythonVer = "3.10"
 local M = {}
-local function mkdir(path)
-  if not uv.fs_stat(path) then
-    uv.fs_mkdir(path, 448)
-  end
+
+function M.add_module()
+  vim.ui.input({ prompt = "請輸入新模組名稱: " }, function(mod_name)
+    if not mod_name or mod_name == "" then
+      return
+    end
+
+    -- 這裡假設你在專案根目錄執行
+    local mod_path = vim.fn.getcwd() .. "/src/" .. mod_name
+
+    if vim.fn.isdirectory(mod_path) == 1 then
+      vim.notify("⚠️ 模組已存在！", vim.log.levels.WARN)
+      return
+    end
+
+    vim.fn.mkdir(mod_path, "p")
+    local init_file = mod_path .. "/__init__.py"
+    local f = io.open(init_file, "w")
+    if f then
+      f:close()
+    end
+
+    vim.notify("✅ 模組 " .. mod_name .. " 已建立於 src/" .. mod_name, vim.log.levels.INFO)
+    -- 自動開啟該模組的 __init__.py 方便編輯
+    vim.cmd("edit " .. init_file)
+  end)
 end
 
-local function touch(path)
+-- 註冊新指令
+-- vim.api.nvim_create_user_command("PyAddModule", M.add_module, {})
+
+-- 輔助：寫入檔案
+local function write_file(path, content)
   local f = io.open(path, "w")
   if f then
+    f:write(content or "")
     f:close()
   end
 end
 
-local function list_py_files(dir)
-  local files = {}
-  local handle = uv.fs_scandir(dir)
-  if not handle then
-    return files
-  end
-
-  while true do
-    local name, t = uv.fs_scandir_next(handle)
-    if not name then
-      break
-    end
-
-    if t == "file" and name:match("%.py$") and name ~= "__init__.py" and not name:match("^_") then
-      table.insert(files, name)
-    end
-  end
-
-  return files
+-- 輔助：檢查執行檔
+local function has_bin(bin)
+  return vim.fn.executable(bin) == 1
 end
 
-local function parse_exports(file)
-  local exports = {}
-
-  for line in io.lines(file) do
-    -- local fn = line:match("^def%s+([%w_]+)")
-    -- local cls = line:match("^class%s+([%w_]+)")
-    local fn = line:match("^%s*def%s+([%w_]+)")
-    local cls = line:match("^%s*class%s+([%w_]+)")
-
-    local name = fn or cls
-    if name and not name:match("^_") then
-      table.insert(exports, name)
+function M.create_python_project()
+  vim.ui.input({ prompt = "🚀 專案名稱: " }, function(name)
+    if not name or name == "" then
+      return
     end
-  end
 
-  return exports
-end
+    local cwd = vim.fn.getcwd()
+    local root = cwd .. "/" .. name
+    if vim.fn.isdirectory(root) == 1 then
+      vim.notify("⚠️ 資料夾已存在！", vim.log.levels.WARN)
+      return
+    end
 
-function M.generate_init(pkg_path)
-  local py_files = list_py_files(pkg_path)
+    -- 1. 建立目錄結構 (Source Layout)
+    local src_root = root .. "/src"
+    local main_pkg = src_root .. "/" .. name
+    local module_pkg = src_root .. "/modules"
+    local tests_dir = root .. "/tests"
 
-  local import_lines = {}
-  local all_symbols = {}
-  local seen = {}
+    vim.fn.mkdir(root, "p")
+    vim.fn.mkdir(main_pkg, "p")
+    vim.fn.mkdir(module_pkg, "p")
+    vim.fn.mkdir(tests_dir, "p")
 
-  for _, file in ipairs(py_files) do
-    local mod = file:gsub("%.py$", "")
-    local fullpath = pkg_path .. "/" .. file
-    local symbols = parse_exports(fullpath)
+    -- 2. 建立基礎檔案與 Pytest 範例
+    write_file(main_pkg .. "/__init__.py", "")
+    write_file(
+      main_pkg .. "/main.py",
+      "def add(a, b):\n    return a + b\n\nif __name__ == '__main__':\n    print(f'Sum: {add(1, 2)}')"
+    )
+    write_file(module_pkg .. "/__init__.py", "")
 
-    if #symbols > 0 then
-      table.insert(import_lines, string.format("from .%s import %s", mod, table.concat(symbols, ", ")))
-      for _, s in ipairs(symbols) do
-        if not seen[s] then
-          seen[s] = true
-          table.insert(all_symbols, s)
+    -- 建立一個基礎測試檔案
+    write_file(tests_dir .. "/__init__.py", "")
+    write_file(
+      tests_dir .. "/test_main.py",
+      "from " .. name .. ".main import add\n\ndef test_add():\n    assert add(1, 2) == 3"
+    )
+
+    write_file(root .. "/README.md", "# " .. name)
+
+    -- 3. 產生配置檔案 (Pyright & Pytest)
+    -- pyrightconfig.json 確保 src 被視為 root
+    local pyright_json = [[
+{
+  "include": ["src", "tests"],
+  "venvPath": ".",
+  "venv": ".venv",
+  "extraPaths": ["./src"],
+  "executionEnvironments": [
+    {
+      "root": "src"
+    }
+  ]
+}
+]]
+    write_file(root .. "/pyrightconfig.json", pyright_json)
+
+    -- 4. 初始化環境、安裝 pytest 並啟動
+    local function finalize()
+      vim.schedule(function()
+        vim.notify("✅ 專案 " .. name .. " 與 Pytest 已就緒！", vim.log.levels.INFO)
+        vim.cmd("LspRestart")
+        vim.cmd("edit " .. main_pkg .. "/main.py")
+      end)
+    end
+
+    if has_bin("uv") then
+      vim.notify("使用 uv 初始化並安裝 pytest...", vim.log.levels.INFO)
+      vim.system({ "uv", "init", "--lib", "--name", name }, { cwd = root }, function(obj)
+        if obj.code == 0 then
+          -- 加入 pytest 到 pyproject.toml 並設定配置
+          local pytest_toml = '\n[tool.pytest.ini_options]\npythonpath = ["src"]\ntestpaths = ["tests"]\n'
+          local f = io.open(root .. "/pyproject.toml", "a")
+          if f then
+            f:write(pytest_toml)
+            f:close()
+          end
+
+          -- 安裝 pytest 並同步環境
+          vim.system({ "uv", "add", "pytest", "--dev" }, { cwd = root }, function()
+            vim.system({ "uv", "sync" }, { cwd = root }, finalize)
+          end)
         end
-      end
-    end
-  end
+      end)
+    else
+      vim.notify("use standard venv and starting ...", vim.log.levels.INFO)
+      local base_toml = [[
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
-  local f = io.open(pkg_path .. "/__init__.py", "w")
-  if not f then
-    return
-  end
-
-  for _, l in ipairs(import_lines) do
-    f:write(l .. "\n")
-  end
-
-  if #all_symbols > 0 then
-    f:write("\n__all__ = [\n")
-    for _, s in ipairs(all_symbols) do
-      f:write(string.format('    "%s",\n', s))
-    end
-    f:write("]\n")
-  end
-
-  f:close()
-end
-
--- 主入口
-function M.NewPyProjectAuto(name)
-  if not name or name == "" then
-    print("❌ 請提供專案 / 套件名稱")
-    return
-  end
-
-  local cwd = fn.getcwd()
-
-  local is_project_root = uv.fs_stat(cwd .. "/pyproject.toml")
-    and uv.fs_stat(cwd .. "/pyrightconfig.json")
-    and uv.fs_stat(cwd .. "/src")
-
-  local project_path = is_project_root and cwd or (cwd .. "/" .. name)
-  local src_path = project_path .. "/src"
-  local tests_path = project_path .. "/tests"
-  local pkg_path = src_path .. "/" .. name
-
-  -- === 建立目錄 ===
-  mkdir(project_path)
-  mkdir(src_path)
-  mkdir(tests_path)
-  mkdir(pkg_path)
-  mkdir(pkg_path .. "/typestubs")
-
-  if not uv.fs_stat(pkg_path .. "/__init__.py") then
-    touch(pkg_path .. "/__init__.py")
-  end
-  touch(pkg_path .. "/typestubs/__init__.py")
-
-  -- === pyproject.toml（只在新專案建立）===
-  if not is_project_root then
-    local pyproject = string.format([[
 [project]
-name = "%s"
+name = "]] .. name .. [["
 version = "0.1.0"
-description = ""
+dependencies = []
 requires-python = ">=]] .. pythonVer .. [["
+
+[tool.setuptools]
+# 關鍵：告訴工具去 src 資料夾找代碼
+package-dir = {"" = "src"}
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-]], name)
+[tool.pyright]
+extraPaths = ["src"]
+venvPath = "."
+venv = ".venv"
 
-    local f = io.open(project_path .. "/pyproject.toml", "w")
-    if f then
-      f:write(pyproject)
-      f:close()
+]]
+      write_file(root .. "/pyproject.toml", base_toml)
+      write_file(root .. "/.gitignore", ".venv/\n__pycache__/\n.pytest_cache/\n")
+
+      -- building venv and execute develop mode install
+      vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
+        -- 核心步驟：安裝 pytest 並將專案本身安裝為可編輯模式
+        local pip_path = root .. "/.venv/bin/pip"
+        vim.system({ pip_path, "install", "-e", ".", "pytest" }, { cwd = root }, finalize)
+      end)
+
+      -- 建立 venv 並安裝 pytest
+      vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
+        -- 這裡需要使用該虛擬環境的 pip 來安裝 pytest
+        local pip_path = root .. "/.venv/bin/pip"
+        vim.system({ pip_path, "install", "pytest" }, {}, finalize)
+      end)
     end
-  end
-
-  -- === pyrightconfig.json（永遠覆寫，保持正確）===
-  local pyright = {
-    include = { "src", "tests" },
-    pythonVersion = pythonVer,
-    executionEnvironments = {
-      { root = "src" },
-    },
-    typeCheckingMode = "standard",
-    reportMissingTypeStubs = false,
-  }
-
-  local f = io.open(project_path .. "/pyrightconfig.json", "w")
-  if f then
-    f:write(json.encode(pyright, { indent = true }))
-    f:close()
-  end
-
-  M.generate_init(pkg_path)
-
-  print("✅ Python src-layout 專案就緒")
-  print("   專案位置：" .. project_path)
-  print("   套件名稱：" .. name)
+  end)
 end
 
-_G.NewPyProjectAuto = M.NewPyProjectAuto
+-- 主入口
 
 return M

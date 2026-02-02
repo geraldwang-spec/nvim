@@ -10,7 +10,7 @@ return {
       ["<CR>"] = { "accept", "fallback" },
       -- ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       -- ["<C-e>"] = { "hide", "fallback" },
-      -- ["."] = { "show", "fallback" },
+      ["."] = { "show", "fallback" },
     },
     appearance = {
       use_nvim_cmp_as_default = true,
