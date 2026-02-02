@@ -162,7 +162,7 @@ venv = ".venv"
 
 ]]
       write_file(root .. "/pyproject.toml", base_toml)
-      write_file(root .. "/.gitignore", ".venv/\n__pycache__/\n.pytest_cache/\n")
+      write_file(root .. "/.gitignore", ".venv/\n__pycache__/\n.pytest_cache/\n*.egg-info/\n")
 
       -- building venv and execute develop mode install
       vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
@@ -170,13 +170,13 @@ venv = ".venv"
         local pip_path = root .. "/.venv/bin/pip"
         vim.system({ pip_path, "install", "-e", ".", "pytest" }, { cwd = root }, finalize)
       end)
-
-      -- 建立 venv 並安裝 pytest
-      vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
-        -- 這裡需要使用該虛擬環境的 pip 來安裝 pytest
-        local pip_path = root .. "/.venv/bin/pip"
-        vim.system({ pip_path, "install", "pytest" }, {}, finalize)
-      end)
+      --
+      -- -- 建立 venv 並安裝 pytest
+      -- vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
+      --   -- 這裡需要使用該虛擬環境的 pip 來安裝 pytest
+      --   local pip_path = root .. "/.venv/bin/pip"
+      --   vim.system({ pip_path, "install", "pytest" }, {}, finalize)
+      -- end)
     end
   end)
 end
