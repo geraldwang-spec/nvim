@@ -5,33 +5,6 @@ local json = require("dkjson")
 local pythonVer = "3.10"
 local M = {}
 
-function M.add_module()
-  vim.ui.input({ prompt = "請輸入新模組名稱: " }, function(mod_name)
-    if not mod_name or mod_name == "" then
-      return
-    end
-
-    -- 這裡假設你在專案根目錄執行
-    local mod_path = vim.fn.getcwd() .. "/src/" .. mod_name
-
-    if vim.fn.isdirectory(mod_path) == 1 then
-      vim.notify("⚠️ 模組已存在！", vim.log.levels.WARN)
-      return
-    end
-
-    vim.fn.mkdir(mod_path, "p")
-    local init_file = mod_path .. "/__init__.py"
-    local f = io.open(init_file, "w")
-    if f then
-      f:close()
-    end
-
-    vim.notify("✅ 模組 " .. mod_name .. " 已建立於 src/" .. mod_name, vim.log.levels.INFO)
-    -- 自動開啟該模組的 __init__.py 方便編輯
-    vim.cmd("edit " .. init_file)
-  end)
-end
-
 -- 註冊新指令
 -- vim.api.nvim_create_user_command("PyAddModule", M.add_module, {})
 
@@ -47,6 +20,53 @@ end
 -- 輔助：檢查執行檔
 local function has_bin(bin)
   return vim.fn.executable(bin) == 1
+end
+
+function M.add_module()
+  vim.ui.input({ prompt = "請輸入新模組名稱: " }, function(mod_name)
+    if not mod_name or mod_name == "" then
+      return
+    end
+
+    -- 1. 智慧偵測專案根目錄
+    -- upward = true 表示往上找；stop 限制不要找過頭到系統根目錄
+    local root_obj = vim.fs.find({ "pyproject.toml", ".git" }, {
+      upward = true,
+      stop = vim.loop.os_homedir(),
+      path = vim.fn.expand("%:p:h"), -- 從目前編輯檔案的目錄開始找
+    })
+
+    local root_dir = (#root_obj > 0) and vim.fn.fnamemodify(root_obj[1], ":h") or vim.fn.getcwd()
+
+    -- 2. 設定目標路徑
+    local src_path = root_dir .. "/src"
+    local target_path = src_path .. "/" .. mod_name
+
+    -- 3. 強制檢查與自動修正
+    -- 如果根目錄下沒有 src，問使用者是否要建立
+    if vim.fn.isdirectory(src_path) == 0 then
+      local confirm = vim.fn.input("找不到 src/ 資料夾，要在 " .. root_dir .. " 下建立嗎？(y/n): ")
+      if confirm:lower() == "y" then
+        vim.fn.mkdir(src_path, "p")
+      else
+        vim.notify("❌ 操作取消：找不到 src 資料夾", vim.log.levels.ERROR)
+        return
+      end
+    end
+
+    -- 4. 建立模組
+    if vim.fn.isdirectory(target_path) == 1 then
+      vim.notify("⚠️ 模組 " .. mod_name .. " 已存在！", vim.log.levels.WARN)
+      return
+    end
+
+    vim.fn.mkdir(target_path, "p")
+    local init_file = target_path .. "/__init__.py"
+    write_file(init_file, "")
+
+    vim.notify("✅ 模組已建立：" .. target_path, vim.log.levels.INFO)
+    vim.cmd("edit " .. init_file)
+  end)
 end
 
 function M.create_python_project()
@@ -110,6 +130,7 @@ function M.create_python_project()
     -- 4. 初始化環境、安裝 pytest 並啟動
     local function finalize()
       vim.schedule(function()
+        vim.api.nvim_set_current_dir(root)
         vim.notify("✅ 專案 " .. name .. " 與 Pytest 已就緒！", vim.log.levels.INFO)
         vim.cmd("LspRestart")
         vim.cmd("edit " .. main_pkg .. "/main.py")
