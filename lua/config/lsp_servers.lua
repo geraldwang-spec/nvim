@@ -2,7 +2,7 @@ local M = {}
 
 -- 全域自動安裝的 LSP
 M.servers = {
-  "pyright", -- Python
+  -- "pyright", -- Python
   "lua_ls", -- Lua
   "ts_ls", -- TypeScript / JavaScript
   -- "cmakelang",
@@ -19,6 +19,7 @@ M.servers = {
 M.special_servers = {
   -- "clangd", -- 例如 C/C++ 需要特別 cmd 或 flags
   -- "dartls", -- Dart
+  "basedpyright",
 }
 
 return M

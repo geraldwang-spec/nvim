@@ -185,6 +185,16 @@ venv = ".venv"
 dev = [
   "pyinstaller",
   "pytest",
+  "basedpyright",
+  "ruff",
+]
+jupyter = [
+  "ipython",
+  "pynvim",
+  "jupyter_client",
+  "cairosvg",
+  "plotly",
+  "ipykernel",
 ]
 
 ]]
@@ -195,8 +205,9 @@ dev = [
       vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
         -- 核心步驟：安裝 pytest 並將專案本身安裝為可編輯模式
         local pip_path = root .. "/.venv/bin/pip"
-        vim.system({ pip_path, "install", "-e", ".", "pytest" }, { cwd = root }, finalize)
-        vim.system({ pip_path, "install", "-e", ".", "pyinstaller" }, { cwd = root }, finalize)
+        vim.system({ pip_path, "install", "-e", ".[dev,jupyter]" }, { cwd = root }, finalize)
+        -- vim.system({ pip_path, "install", "-e", ".", "pytest" }, { cwd = root }, finalize)
+        -- vim.system({ pip_path, "install", "-e", ".", "pyinstaller" }, { cwd = root }, finalize)
       end)
       --
       -- -- 建立 venv 並安裝 pytest
