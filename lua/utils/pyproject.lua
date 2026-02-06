@@ -181,6 +181,12 @@ extraPaths = ["src"]
 venvPath = "."
 venv = ".venv"
 
+[project.optional-dependencies]
+dev = [
+  "pyinstaller",
+  "pytest",
+]
+
 ]]
       write_file(root .. "/pyproject.toml", base_toml)
       write_file(root .. "/.gitignore", ".venv/\n__pycache__/\n.pytest_cache/\n*.egg-info/\n")
@@ -190,6 +196,7 @@ venv = ".venv"
         -- 核心步驟：安裝 pytest 並將專案本身安裝為可編輯模式
         local pip_path = root .. "/.venv/bin/pip"
         vim.system({ pip_path, "install", "-e", ".", "pytest" }, { cwd = root }, finalize)
+        vim.system({ pip_path, "install", "-e", ".", "pyinstaller" }, { cwd = root }, finalize)
       end)
       --
       -- -- 建立 venv 並安裝 pytest
