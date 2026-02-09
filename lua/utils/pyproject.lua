@@ -221,22 +221,77 @@ dist = [
       write_file(root .. "/.gitignore", ".venv/\n__pycache__/\n.pytest_cache/\n*.egg-info/\n")
 
       -- building venv and execute develop mode install
-      vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
-        -- 核心步驟：安裝 pytest 並將專案本身安裝為可編輯模式
-        local pip_path = root .. "/.venv/bin/pip"
-        -- vim.system({ pip_path, "install", "-e", "." }, { cwd = root }, finalize)
-        vim.system({ pip_path, "install", "-e", ".[dev,dist,datasci]" }, { cwd = root }, finalize)
-        -- vim.system({ "python3", "-m", "ipykernel", "install", "--user", "--name=" .. name }, { cwd = root }, finalize)
-        -- vim.system({ pip_path, "install", "-e", ".", "pytest" }, { cwd = root }, finalize)
-        -- vim.system({ pip_path, "install", "-e", ".", "pyinstaller" }, { cwd = root }, finalize)
+      local is_windows = vim.uv.os_uname().sysname:find("Windows") ~= nil
+      local bin_dir = is_windows and "Scripts" or "bin"
+      local python_exe = is_windows and "python.exe" or "python"
+      local pip_exe = is_windows and "pip.exe" or "pip"
+
+      local venv_python = string.format("%s/.venv/%s/%s", root, bin_dir, python_exe)
+      local venv_pip = string.format("%s/.venv/%s/%s", root, bin_dir, pip_exe)
+
+      vim.system({ "python", "-m", "venv", ".venv" }, { cwd = root }, function(obj)
+        if obj.code ~= 0 then
+          vim.schedule(function()
+            vim.notify("建立 venv 失敗", "error")
+          end)
+          return
+        end
+
+        -- 第一層完成：開始安裝 dependencies
+        vim.system({ venv_pip, "install", "-e", ".[dev,dist,datasci]" }, { cwd = root }, function(obj2)
+          if obj2.code ~= 0 then
+            vim.schedule(function()
+              vim.notify("Pip 安裝失敗", "error")
+            end)
+            if finalize then
+              finalize(obj2)
+            end -- 失敗也執行 finalize 以結束流程
+            return
+          end
+
+          -- 第二層完成：開始註冊 Kernel
+          local name = vim.fn.fnamemodify(root, ":t")
+          vim.system(
+            { venv_python, "-m", "ipykernel", "install", "--user", "--name=" .. name },
+            { cwd = root },
+            function(obj3)
+              -- 第三層完成：這是最後一步
+              vim.schedule(function()
+                if obj3.code == 0 then
+                  vim.notify(
+                    "環境初始化與 Kernel 註冊成功！系統：" .. (is_windows and "Windows" or "Linux"),
+                    "info"
+                  )
+                else
+                  vim.notify("Kernel 註冊失敗，但環境已建立", "warn")
+                end
+
+                -- 所有的非同步操作都結束了，執行 finalize
+                if finalize then
+                  finalize(obj3)
+                end
+              end)
+            end
+          )
+        end)
       end)
-      --
-      -- -- 建立 venv 並安裝 pytest
+
       -- vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
-      --   -- 這裡需要使用該虛擬環境的 pip 來安裝 pytest
+      --   -- 核心步驟：安裝 pytest 並將專案本身安裝為可編輯模式
       --   local pip_path = root .. "/.venv/bin/pip"
-      --   vim.system({ pip_path, "install", "pytest" }, {}, finalize)
+      --   -- vim.system({ pip_path, "install", "-e", "." }, { cwd = root }, finalize)
+      --   vim.system({ pip_path, "install", "-e", ".[dev,dist,datasci]" }, { cwd = root }, finalize)
+      --   -- vim.system({ "python3", "-m", "ipykernel", "install", "--user", "--name=" .. name }, { cwd = root }, finalize)
+      --   -- vim.system({ pip_path, "install", "-e", ".", "pytest" }, { cwd = root }, finalize)
+      --   -- vim.system({ pip_path, "install", "-e", ".", "pyinstaller" }, { cwd = root }, finalize)
       -- end)
+      -- --
+      -- -- -- 建立 venv 並安裝 pytest
+      -- -- vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
+      -- --   -- 這裡需要使用該虛擬環境的 pip 來安裝 pytest
+      -- --   local pip_path = root .. "/.venv/bin/pip"
+      -- --   vim.system({ pip_path, "install", "pytest" }, {}, finalize)
+      -- -- end)
     end
   end)
 end
