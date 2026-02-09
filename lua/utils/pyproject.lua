@@ -165,7 +165,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "]] .. name .. [["
 version = "0.1.0"
-dependencies = []
+dependencies = [
+  "ipython",
+  "ipykernel",
+  "pynvim",
+  "jupytext", # 建議加上
+]
 requires-python = ">=]] .. pythonVer .. [["
 
 [tool.setuptools]
@@ -182,20 +187,16 @@ venvPath = "."
 venv = ".venv"
 
 [project.optional-dependencies]
-dev = [
-  "pyinstaller",
-  "pytest",
-  "basedpyright",
-  "ruff",
-]
-jupyter = [
-  "ipython",
-  "pynvim",
-  "jupyter_client",
-  "cairosvg",
-  "plotly",
-  "ipykernel",
-]
+# 數據科學組
+datasci = ["numpy", "scipy", "pandas", "polars", "matplotlib", "seaborn", "plotly", "cairosvg"]
+# 機器學習組
+ml = ["scikit-learn", "xgboost", "lightgbm"]
+# 深度學習組
+dl = ["torch", "torchvision", "torchaudio"]
+# 開發者工具組 (用於 Neovim LSP 和代碼檢查)
+dev = ["ruff", "basedpyright", "pytest"]
+# 發布組
+dist = ["pyinstaller"]
 
 ]]
       write_file(root .. "/pyproject.toml", base_toml)
@@ -205,7 +206,7 @@ jupyter = [
       vim.system({ "python3", "-m", "venv", ".venv" }, { cwd = root }, function()
         -- 核心步驟：安裝 pytest 並將專案本身安裝為可編輯模式
         local pip_path = root .. "/.venv/bin/pip"
-        vim.system({ pip_path, "install", "-e", ".[dev,jupyter]" }, { cwd = root }, finalize)
+        vim.system({ pip_path, "install", "-e", ".[dev,dist, datasci]" }, { cwd = root }, finalize)
         -- vim.system({ pip_path, "install", "-e", ".", "pytest" }, { cwd = root }, finalize)
         -- vim.system({ pip_path, "install", "-e", ".", "pyinstaller" }, { cwd = root }, finalize)
       end)

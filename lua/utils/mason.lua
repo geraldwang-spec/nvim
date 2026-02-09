@@ -44,6 +44,10 @@ for _, server in ipairs(lsp_list.servers) do
   })
 end
 
+lspconfig.basedpyright.setup({
+  capabilities = blink_cmp.get_lsp_capabilities(),
+})
+
 -- 🌟 特殊 LSP setup
 lspconfig.clangd.setup({
   capabilities = blink_cmp.get_lsp_capabilities(),
