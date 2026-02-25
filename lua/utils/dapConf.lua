@@ -103,3 +103,30 @@ dap.adapters.flutter = {
     detached = false,
   },
 }
+-- 1. 定義 Adapter (指向 Mason 的 debugpy)
+dap.adapters.python = {
+  type = "executable",
+  command = vim.fn.expand("$HOME/.local/share/nvim/mason/packages/debugpy/venv/bin/python"),
+  args = { "-m", "debugpy.adapter" },
+}
+
+-- 2. 定義 Configuration (指向專案的 Python)
+dap.configurations.python = {
+  {
+    type = "python",
+    request = "launch",
+    name = "Launch file",
+    program = vim.fn.getcwd() .. "/src/pythonP/main.py",
+    -- 這裡自動檢測專案有沒有 venv，有的話就用 venv 裡的 python 跑代碼
+    pythonPath = function()
+      local cwd = vim.fn.getcwd()
+      if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+        return cwd .. "/venv/bin/python"
+      elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+        return cwd .. "/.venv/bin/python"
+      else
+        return "python3" -- 預設使用系統 python3
+      end
+    end,
+  },
+}
