@@ -13,6 +13,8 @@ M.servers = {
   -- "shellcheck",
   -- "shfmt",
   -- "flake8",
+  "html",
+  "cssls",
 }
 
 -- 需要特殊設定的 LSP
