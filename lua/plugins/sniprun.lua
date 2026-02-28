@@ -9,12 +9,17 @@ return {
   },
   opts = {
     display = {
-      -- "VirtualTextOk", -- 簡單的結果直接顯示在行尾 (例如: => 42)
-      "FloatingWindow", -- 較長的結果（如報錯或 List）彈出浮動視窗
+      "Classic", -- 顯示在行尾的虛擬文字（適合看單行）
+      "VirtualTextOk", -- 只在成功時顯示虛擬文字
+      "FloatingWindow", -- 顯示完整輸出的浮動視窗
+    },
+    show_no_output = {
+      "Classic",
+      "FloatingWindow", -- 即使沒有 print 只有回傳值也顯示視窗
     },
     display_options = {
       terminal_width = 45, -- 浮動視窗寬度
-      notification_timeout = 5, -- 5 秒後自動關閉虛擬文字
+      notification_timeout = 10, -- 5 秒後自動關閉虛擬文字
     },
     -- 讓顯示視窗有點邊框，看起來更像現代 IDE
     floating_window_options = {
