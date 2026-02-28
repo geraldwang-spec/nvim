@@ -4,10 +4,35 @@ return {
   },
   {
     "mfussenegger/nvim-dap",
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      "theHamsta/nvim-dap-virtual-text",
+      "nvim-neotest/nvim-nio",
+    },
+    config = function()
+      require("utils.dapConf").config()
+    end,
+  },
+  {
     "rcarriga/nvim-dap-ui",
-    "nvim-neotest/nvim-nio",
-    "theHamsta/nvim-dap-virtual-text",
-    "mfussenegger/nvim-dap-python",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    opts = {}, -- 使用預設值，解決 Missing fields 警告
+    config = function(_, opts)
+      local dap = require("dap")
+      local dapui = require("dapui")
+      dapui.setup(opts)
+
+      -- 建立自動彈出 UI 的監聽器
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
   },
   {
     "sindrets/diffview.nvim",
