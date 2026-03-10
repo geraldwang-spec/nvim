@@ -114,10 +114,6 @@ function M.create_python_project()
     -- pyrightconfig.json 確保 src 被視為 root
     local pyright_json = [[
 {
-  "include": ["src", "tests"],
-  "venvPath": ".",
-  "venv": ".venv",
-  "extraPaths": ["./src"],
   "executionEnvironments": [
     {
       "root": "src"
@@ -182,6 +178,7 @@ pythonpath = ["src"]
 testpaths = ["tests"]
 
 [tool.pyright]
+include = ["src", "tests"],
 extraPaths = ["src"]
 venvPath = "."
 venv = ".venv"
@@ -214,6 +211,10 @@ dev = [
 ]
 dist = [
   "pyinstaller",
+]
+web = [
+  "fastapi",
+  "fastapi-cli",
 ]
 
 ]]
