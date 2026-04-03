@@ -178,7 +178,7 @@ pythonpath = ["src"]
 testpaths = ["tests"]
 
 [tool.pyright]
-include = ["src", "tests"],
+include = ["src", "tests"]
 extraPaths = ["src"]
 venvPath = "."
 venv = ".venv"
